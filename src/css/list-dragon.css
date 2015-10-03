@@ -39,11 +39,10 @@ div.container {
     color: #b6b6b6;
     font-size: 30px;
     margin: 8px 14px 8px 8px;
-    /*
-    position: relative;
-    top: 2px;
-    cursor: move;
-    */
+}
+.list > li:last-child {
+    height: 0;
+    border-bottom: none;
 }
 li.dragging {
     position:fixed;

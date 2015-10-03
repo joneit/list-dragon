@@ -74,8 +74,7 @@
             drop = this.nextElementSibling;
             drop.style.transition = 'marginTop 0s';
             drop.style.marginTop = rect.height + 'px';
-
-            this.parentElement.removeChild(this);
+            drop.style.borderTop = window.getComputedStyle(drop).borderBottom;
 
             this.style.width = rect.width + 'px';
             this.style.transform = translate(rect.left, rect.top);
@@ -83,9 +82,20 @@
 
             boundingRects = [];
             items.forEach(function (item) {
+                var rect = item.getBoundingClientRect();
+
+                if (item === item.parentElement.lastElementChild) {
+                    rect = {
+                        left:   rect.left,
+                        top:    rect.top,
+                        right:  rect.right,
+                        bottom: item.parentElement.getBoundingClientRect().bottom
+                    };
+                }
+
                 boundingRects.push({
                     item: item,
-                    rect: item.getBoundingClientRect()
+                    rect: rect
                 });
             });
 
@@ -109,7 +119,8 @@
 
             if (other) {
                 other.item.style.marginTop = drop.style.marginTop;
-                drop.style.marginTop = null;
+                other.item.style.borderTop = drop.style.borderTop;
+                drop.style.marginTop = drop.style.borderTop = null;
                 drop = other.item;
             }
         },
@@ -132,7 +143,7 @@
             this.style.width = this.style.transition = this.style.transform = null;
             this.classList.remove('dragging');
             drop.style.transition = 'marginTop 0s';
-            drop.style.marginTop = null;
+            drop.style.marginTop = drop.style.borderTop = null;
             drop.parentElement.insertBefore(this, drop);
         }
     };
