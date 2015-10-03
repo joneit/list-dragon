@@ -1,3 +1,3 @@
 # list-dnd
-Drag and drop list items between lists.
+Drag and drop items between lists.
 

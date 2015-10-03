@@ -1,11 +1,11 @@
 {
-  "name": "list-dnd",
+  "name": "list-dragon",
   "version": "0.9.0",
-  "main": "./src/js/list-dnd.js",
-  "description": "Drag and drop list items between lists.",
+  "main": "./src/js/list-dragon.js",
+  "description": "Drag and drop items between lists.",
   "repository": {
     "type": "git",
-    "url": "git://github.com/openfin/list-dnd.git"
+    "url": "git://github.com/openfin/list-dragon.git"
   },
   "author": "JEiten",
   "license": "MIT",
