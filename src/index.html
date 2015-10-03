@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>list-dnd test harness</title>
+
+    <link rel="stylesheet" type="text/css" href="css/list-dragon.css"/>
+    <link rel="stylesheet" type="text/css" href="css/example.css"/>
+
+    <script src="/bower_components/mnm/src/js/mnm.js"></script>
+
+    <script src="js/list-dragon.js"></script>
+    <script> module.cache('list-dragon'); </script>
+
+    <script src="js/example.js"></script>
+    <script> module.cache('example'); </script>
+
+    <script>
+        var listDnD = require('list-dragon');
+        window.onload = function () {
+            listDnD.initialize();
+        };
+    </script>
+</head>
+<body>
+
+<div class="container">
+    <ul class="list">
+        <li>Da spring is sprung</li>
+        <li>Da grass is riz</li>
+        <li>I <b>wonda</b> wheyah</li>
+        <li>Da boidies is!</li>
+        <li style="border-bottom:none;background-color:yellow">&nbsp;</li>
+    </ul>
+</div>
+<div class="container">
+    <ul class="list">
+        <li>Da spring is sprung</li>
+        <li>Da grass is riz</li>
+        <li>I <b>wonda</b> wheyah</li>
+        <li>Da boidies is!</li>
+        <li style="border-bottom:none;background-color:yellow">&nbsp;</li>
+    </ul>
+</div>
+</body>
+</html>
