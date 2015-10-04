@@ -4,11 +4,14 @@
 
 (function (module, exports) { // This closure supports NodeJS-less client side includes with <script> tags. See https://github.com/joneit/mnm.
 
-    var body, rect, pin, drop, bindings = {}, items = [], boundingRects;
+    var body, rect, pin, drop, bindings = {}, items = [], boundingRects, transform;
 
     exports.initialize = function () {
         body = document.getElementsByTagName('body')[0];
         items = toArray(document.querySelectorAll('ul.list > li'));
+
+        transform = 'webkitTransform';
+        if (!(transform in items[0].style)) { transform = 'transform'; }
 
         items.forEach(function (item) {
             if (item !== item.parentElement.lastElementChild) {
@@ -76,7 +79,7 @@
             drop.style.borderTopWidth = rect.height + 'px';
 
             this.style.width = rect.width + 'px';
-            this.style.transform = translate(rect.left, rect.top);
+            this.style[transform] = translate(rect.left, rect.top);
             this.classList.add('dragging');
 
             boundingRects = [];
@@ -114,7 +117,7 @@
                 bottom = { x: evt.clientX, y: rect.bottom + dy},
                 other = pointInRects(bottom, this, drop);
 
-            this.style.transform = translate(rect.left + dx, rect.top + dy);
+            this.style[transform] = translate(rect.left + dx, rect.top + dy);
 
             if (other) {
                 other.item.style.borderTopWidth = drop.style.borderTopWidth;
@@ -131,14 +134,14 @@
 
             addEvt(this, 'transitionend');
             this.style.transition = 'transform 333ms ease';
-            this.style.transform = translate(dropRect.left, dropRect.top);
+            this.style[transform] = translate(dropRect.left, dropRect.top);
 
             evt.stopPropagation();
         },
 
         transitionend: function () {
             removeEvt('transitionend');
-            this.style.width = this.style.transition = this.style.transform = null;
+            this.style.width = this.style.transition = this.style[transform] = null;
             this.classList.remove('dragging');
             drop.style.transition = 'borderTopWidth 0s';
             drop.style.borderTopWidth = null;
