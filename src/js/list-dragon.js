@@ -63,8 +63,8 @@
         mousedown: function (evt) {
             rect = this.getBoundingClientRect();
             pin = {
-                x: evt.x,
-                y: evt.y
+                x: evt.clientX,
+                y: evt.clientY
             };
 
             if (drop) {
@@ -109,9 +109,9 @@
 
         mousemove: function (evt) {
             drop.style.transition = null;
-            var dx = evt.x - pin.x,
-                dy = evt.y - pin.y,
-                bottom = { x: evt.x, y: rect.bottom + dy},
+            var dx = evt.clientX - pin.x,
+                dy = evt.clientY - pin.y,
+                bottom = { x: evt.clientX, y: rect.bottom + dy},
                 other = pointInRects(bottom, this, drop);
 
             this.style.transform = translate(rect.left + dx, rect.top + dy);
