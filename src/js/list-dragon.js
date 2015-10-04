@@ -4,7 +4,7 @@
 
 (function (module, exports) { // This closure supports NodeJS-less client side includes with <script> tags. See https://github.com/joneit/mnm.
 
-    var body, rect, pin, drop, bindings = {}, items = [], boundingRects, transform;
+    var body, rect, pin, drop, bindings = {}, items = [], boundingRects, transform, moved;
 
     exports.initialize = function () {
         body = document.getElementsByTagName('body')[0];
@@ -64,7 +64,12 @@
 
     var handlers = {
         mousedown: function (evt) {
+
+            evt.stopPropagation();
+            //evt.preventDefault();
+
             rect = this.getBoundingClientRect();
+
             pin = {
                 x: evt.clientX,
                 y: evt.clientY
@@ -103,14 +108,13 @@
 
             body.appendChild(this);
 
-            evt.stopPropagation();
-            //evt.preventDefault();
-
+            moved = false;
             addEvt(this, 'mousemove');
             addEvt(this, 'mouseup');
         },
 
         mousemove: function (evt) {
+            moved = true;
             drop.style.transition = null;
             var dx = evt.clientX - pin.x,
                 dy = evt.clientY - pin.y,
@@ -130,18 +134,24 @@
             removeEvt('mousemove');
             removeEvt('mouseup');
 
-            var dropRect = drop.getBoundingClientRect();
-
-            addEvt(this, 'transitionend');
-            this.style.transition = 'transform 333ms ease';
-            this.style[transform] = translate(dropRect.left, dropRect.top);
-
             evt.stopPropagation();
+
+            if (moved) {
+                var dropRect = drop.getBoundingClientRect();
+
+                addEvt(this, 'transitionend');
+                this.style.transition = 'transform 333ms ease';
+                this.style[transform] = translate(dropRect.left, dropRect.top);
+            } else {
+                handlers.transitionend.call(this);
+            }
         },
 
-        transitionend: function () {
-            removeEvt('transitionend');
-            this.style.width = this.style.transition = this.style[transform] = null;
+        transitionend: function (evt) {
+            if (evt) {
+                removeEvt('transitionend');
+            }
+            this.style.width = this.style[transform] = this.style.transition = null;
             this.classList.remove('dragging');
             drop.style.transition = 'borderTopWidth 0s';
             drop.style.borderTopWidth = null;
