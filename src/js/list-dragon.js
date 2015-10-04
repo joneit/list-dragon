@@ -72,9 +72,8 @@
             }
 
             drop = this.nextElementSibling;
-            drop.style.transition = 'marginTop 0s';
-            drop.style.marginTop = rect.height + 'px';
-            drop.style.borderTop = window.getComputedStyle(drop).borderBottom;
+            drop.style.transition = 'borderTopWidth 0s';
+            drop.style.borderTopWidth = rect.height + 'px';
 
             this.style.width = rect.width + 'px';
             this.style.transform = translate(rect.left, rect.top);
@@ -118,9 +117,8 @@
             this.style.transform = translate(rect.left + dx, rect.top + dy);
 
             if (other) {
-                other.item.style.marginTop = drop.style.marginTop;
-                other.item.style.borderTop = drop.style.borderTop;
-                drop.style.marginTop = drop.style.borderTop = null;
+                other.item.style.borderTopWidth = drop.style.borderTopWidth;
+                drop.style.borderTopWidth = null;
                 drop = other.item;
             }
         },
@@ -133,7 +131,7 @@
 
             addEvt(this, 'transitionend');
             this.style.transition = 'transform 333ms ease';
-            this.style.transform = translate(dropRect.left, dropRect.top - rect.height);
+            this.style.transform = translate(dropRect.left, dropRect.top);
 
             evt.stopPropagation();
         },
@@ -142,8 +140,8 @@
             removeEvt('transitionend');
             this.style.width = this.style.transition = this.style.transform = null;
             this.classList.remove('dragging');
-            drop.style.transition = 'marginTop 0s';
-            drop.style.marginTop = drop.style.borderTop = null;
+            drop.style.transition = 'borderTopWidth 0s';
+            drop.style.borderTopWidth = null;
             drop.parentElement.insertBefore(this, drop);
         }
     };

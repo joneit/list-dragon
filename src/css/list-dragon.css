@@ -27,12 +27,13 @@ div.container {
     line-height: 46px;
     list-style-type: none;
     font-family:'Roboto', sans-serif;
+    border: 0 solid #f4f4f4;
     border-bottom: 1px solid #e0e0e0;
     text-transform: capitalize;
     cursor: move;
     background-color: white;
     color: black;
-    transition: margin-top 250ms;
+    transition: border-top-width 250ms;
 }
 .list > li:not(:last-child)::before, li.dragging::before {
     content:'\2b24';
