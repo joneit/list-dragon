@@ -33,7 +33,7 @@ div.container {
     cursor: move;
     background-color: white;
     color: black;
-    transition: border-top-width 250ms;
+    transition: border-top-width 200ms;
 }
 .list > li:not(:last-child)::before, li.dragging::before {
     content:'\2b24';
@@ -51,6 +51,4 @@ li.dragging {
     left:0;
     top:0;
     box-shadow:rgba(0, 0, 0, .188235) 0 10px 20px, rgba(0, 0, 0, .227451) 0 6px 6px;
-    color:red;
-    opacity: .75;
 }

@@ -4,18 +4,20 @@
 
 (function (module, exports) { // This closure supports NodeJS-less client side includes with <script> tags. See https://github.com/joneit/mnm.
 
-    var body, rect, pin, drop, bindings = {}, items = [], boundingRects, transform, moved;
+    var body, rect, pin, drop, boundingRects, transform;
+    var bindings = {}, items = [];
 
-    exports.initialize = function () {
+    exports.initialize = function (selector) {
         body = document.getElementsByTagName('body')[0];
-        items = toArray(document.querySelectorAll('ul.list > li'));
+        items = toArray(document.querySelectorAll(selector || 'ul.list > li'));
 
-        transform = 'webkitTransform';
-        if (!(transform in items[0].style)) { transform = 'transform'; }
+        transform = 'transform' in items[0].style
+            ? 'transform' // Chrome 45 and Firefox 40
+            : '-webkit-transform'; // Safari 8
 
         items.forEach(function (item) {
             if (item !== item.parentElement.lastElementChild) {
-                addEvt.call(item, item, 'mousedown');
+                addEvt(item, 'mousedown', item, false);
             }
         });
     };
@@ -45,16 +47,43 @@
             + Math.floor(top + window.scrollY) + 'px)';
     }
 
-    function addEvt(target, type) {
-        var listener = this || window;
+    function addEvt(target, type, listener, removable) {
         var handler = handlers[type].bind(target);
 
-        bindings[type] = {
-            handler: handler,
-            listener: listener
-        };
+        listener = listener || window;
+
+        if (removable === undefined || removable) {
+            bindings[type] = {
+                handler: handler,
+                listener: listener
+            };
+        }
 
         listener.addEventListener(type, handler);
+    }
+
+    function getAllBoundingRects() {
+        // get positions of all list items in page coords
+        var rects = [];
+        items.forEach(function (item) {
+            var rect = item.getBoundingClientRect(),
+                last = item === item.parentElement.lastElementChild,
+                fill = last ? item.parentElement.getBoundingClientRect() : rect;
+
+            rect = {
+                left:   window.scrollX + rect.left,
+                top:    window.scrollY + rect.top,
+                right:  window.scrollX + rect.right,
+                bottom: window.scrollY + fill.bottom
+            };
+
+            rects.push({
+                item: item,
+                rect: rect
+            });
+        });
+
+        return rects;
     }
 
     function removeEvt(type) {
@@ -68,60 +97,67 @@
             evt.stopPropagation();
             //evt.preventDefault();
 
+            if (drop) {
+                return;
+            }
+
             rect = this.getBoundingClientRect();
+            rect = {
+                left:   Math.round(rect.left - 1),
+                top:    Math.round(rect.top - 1),
+                right:  Math.round(rect.right ),
+                bottom: Math.round(rect.bottom),
+                width:  Math.round(rect.width),
+                height: Math.round(rect.height)
+            };
 
             pin = {
-                x: evt.clientX,
-                y: evt.clientY
+                x: window.scrollX + evt.clientX,
+                y: window.scrollY + evt.clientY
             };
 
             if (drop) {
                 drop.style.transition = null; //reinstate transition (set to 0 last mouseup)
             }
 
+            boundingRects = getAllBoundingRects();
+
             drop = this.nextElementSibling;
-            drop.style.transition = 'borderTopWidth 0s';
+            drop.style.transition = 'border-top-width 0s';
             drop.style.borderTopWidth = rect.height + 'px';
 
             this.style.width = rect.width + 'px';
-            this.style[transform] = translate(rect.left, rect.top);
+            this.style[transform] = translate(
+                rect.left - window.scrollX,
+                rect.top  - window.scrollY
+            );
             this.classList.add('dragging');
-
-            boundingRects = [];
-            items.forEach(function (item) {
-                var rect = item.getBoundingClientRect();
-
-                if (item === item.parentElement.lastElementChild) {
-                    rect = {
-                        left:   rect.left,
-                        top:    rect.top,
-                        right:  rect.right,
-                        bottom: item.parentElement.getBoundingClientRect().bottom
-                    };
-                }
-
-                boundingRects.push({
-                    item: item,
-                    rect: rect
-                });
-            });
 
             body.appendChild(this);
 
-            moved = false;
-            addEvt(this, 'mousemove');
+            rect.left   += window.scrollX;
+            rect.top    += window.scrollY;
+            rect.right  += window.scrollX;
+            rect.bottom += window.scrollY;
+
+                addEvt(this, 'mousemove');
             addEvt(this, 'mouseup');
         },
 
         mousemove: function (evt) {
-            moved = true;
             drop.style.transition = null;
             var dx = evt.clientX - pin.x,
                 dy = evt.clientY - pin.y,
-                bottom = { x: evt.clientX, y: rect.bottom + dy},
+                bottom = {
+                    x: evt.clientX,
+                    y: rect.bottom + window.scrollY + dy
+                },
                 other = pointInRects(bottom, this, drop);
 
-            this.style[transform] = translate(rect.left + dx, rect.top + dy);
+            this.style[transform] = translate(
+                rect.left - window.scrollX + dx,
+                rect.top  - window.scrollY + dy
+            );
 
             if (other) {
                 other.item.style.borderTopWidth = drop.style.borderTopWidth;
@@ -136,26 +172,40 @@
 
             evt.stopPropagation();
 
-            if (moved) {
+            var newRect = this.getBoundingClientRect();
+            if (
+                window.scrollX + newRect.left === rect.left &&
+                window.scrollY + newRect.top === rect.top
+            ) {
+                handlers.transitionend.call(this);
+            } else {
                 var dropRect = drop.getBoundingClientRect();
 
-                addEvt(this, 'transitionend');
-                this.style.transition = 'transform 333ms ease';
-                this.style[transform] = translate(dropRect.left, dropRect.top);
-            } else {
-                handlers.transitionend.call(this);
+                addEvt(this, 'transitionend', this);
+                this.style.transition = transform + ' 200ms ease';
+                this.style[transform] = translate(
+                    dropRect.left - window.scrollX,
+                    dropRect.top - window.scrollY
+                );
             }
         },
 
         transitionend: function (evt) {
             if (evt) {
+                if (evt.propertyName !== transform) {
+                    return;
+                }
                 removeEvt('transitionend');
             }
+
             this.style.width = this.style[transform] = this.style.transition = null;
             this.classList.remove('dragging');
-            drop.style.transition = 'borderTopWidth 0s';
+
+            drop.style.transition = 'border-top-width 0s';
             drop.style.borderTopWidth = null;
             drop.parentElement.insertBefore(this, drop);
+
+            drop = undefined;
         }
     };
 
