@@ -1,29 +1,27 @@
 div.container {
-    display:inline-block;
-    position:relative;
-    width: 45%;
-    height:700px;
+    display: inline-block;
+    position: relative;
+    width: 49%;
+    height: 350px;
 }
-.list {
-    background-color: white;
+fieldset {
+    margin-bottom: 2em;
+}
+ul.list {
     position: absolute;
-    top: 46px;
-    left: 5%;
-    right: 5%;
+    background-color: white;
+    top: 5%;
+    left: 5.5%;
+    right: 5.5%;
+    bottom: 5%;
     overflow-y: auto;
     list-style-type: none;
-    margin: 0px;
-    padding-top: 0px;
-    padding-left: 0px;
-    bottom: 10%;
+    margin: 0;
+    padding: 0;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
 }
-.list > li, li.dragging {
-    -moz-user-select: none;
-    -webkit-user-select: none;
-    -ms-user-select: none;
-    user-select:none;
-    white-space:nowrap;
+ul.list > li, li.dragging {
+    white-space: nowrap;
     line-height: 46px;
     list-style-type: none;
     font-family:'Roboto', sans-serif;
@@ -35,20 +33,21 @@ div.container {
     color: black;
     transition: border-top-width 200ms;
 }
-.list > li:not(:last-child)::before, li.dragging::before {
-    content:'\2b24';
+ul.list > li:not(:last-child)::before, li.dragging::before {
+    content: '\2b24';
     color: #b6b6b6;
     font-size: 30px;
     margin: 8px 14px 8px 8px;
 }
-.list > li:last-child {
+ul.list > li:last-child {
     height: 0;
     border-bottom: none;
 }
 li.dragging {
-    position:fixed;
+    position: fixed;
     border: 1px solid #e0e0e0;
-    left:0;
-    top:0;
-    box-shadow:rgba(0, 0, 0, .188235) 0 10px 20px, rgba(0, 0, 0, .227451) 0 6px 6px;
+    left: 0;
+    top: 0;
+    overflow-x: hidden;
+    box-shadow: rgba(0, 0, 0, .188235) 0 10px 20px, rgba(0, 0, 0, .227451) 0 6px 6px;
 }

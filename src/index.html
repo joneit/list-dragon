@@ -16,32 +16,92 @@
     <script> module.cache('example'); </script>
 
     <script>
-        var listDnD = require('list-dragon');
+        var ListDragon = require('list-dragon');
+
         window.onload = function () {
-            listDnD.initialize();
+
+            var modelLists = [
+                [
+                    '&rsquo;Twas brillig, and the slithy toves',
+                    'Did gyre and gimble in the wabe;',
+                    'All mimsy were the borogoves,',
+                    'And the mome raths outgrabe.'
+                ], [
+                    'Beware the Jabberwock, my son!',
+                    'The jaws that bite, the claws that catch!',
+                    'Beware the Jubjub bird, and shun',
+                    'The frumious Bandersnatch!'
+                ]
+            ];
+
+            var divs = document.querySelectorAll('fieldset:first-of-type > div');
+
+            // Example A: With models
+            // 1. Supply a (list of) model list(s).
+            // 2. The API creates the  <ul>...</ul> element(s) for you in the .lists property.
+            // 3. Insert the created elements into the DOM wherever/however you want.
+            //
+            // Regarding the model lists:
+            // Each list is either an array of models (see below) OR an object with a `models` property that contains an array of models.
+            // After instantiation, the model lists are in the `lists` property.
+            // If you gave arrays of models, the API will have converted them to objects with a `models` property.
+            // If you gave objects, besides `models` additional properties may include:
+            //   `title` - string for title bar
+            //   `cssClassName` - class name for <div> container (if title) or <ul> (if no title); defaul is 'container'
+            //   `isDropTarget` - boolean or function returning boolean
+            // The API adds the following properties:
+            //   `container` - an new element containing title bar and list, for DOM insertion (will be same as `element` if no title bar)
+            //   `element` - the created <ul>...</ul> element within container
+            //   `isDropTarget` - with default value of true
+            //
+            // Regarding the models themselves:
+            // Each model is either a simple string or an object with a `label` property that contains a string.
+            // If you gave objects, besides `label` additional properties may include:
+            //   `htmlEncode` - boolean will HTML-encode the label text
+            // The models themselves are left untouched; just their positions within the lists may have changed.
+            // So if you gave strings, they will be the same strings; if you gave objects they will be the same objects.
+            new ListDragon(modelLists).lists.forEach(function (list, index) {
+                divs[index].appendChild(list.element);
+            });
+
+            // Example B: Without models
+            // 1. Script your <ul>...</ul> elements in HTML.
+            // 2. Tell ListDragon where to find them via a CSS selector.
+            // You can hang auxiliary data off your <li> tags in attributes, such as `value` or `data-whatever`.
+            new ListDragon('fieldset:last-of-type \\');
         };
     </script>
 </head>
+
 <body>
-<div>
-<div class="container">
-    <ul class="list">
-        <li>The spring is sprung</li>
-        <li>The grass is riz</li>
-        <li>I wonder where</li>
-        <li>The birdies is!</li>
-        <li>&nbsp;</li>
-    </ul>
-</div>
-<div class="container">
-    <ul class="list">
-        <li>The bird is on the wing</li>
-        <li>Which is very odd</li>
-        <li>Because I always heard</li>
-        <li>The wing is on the bird!</li>
-        <li>&nbsp;</li>
-    </ul>
-</div>
-</div>
+
+    <fieldset>
+        <legend>List set #1</legend>
+        <div class="container"> </div>
+        <div class="container"></div>
+    </fieldset>
+
+    <fieldset>
+        <legend>List set #2</legend>
+        <div class="container">
+            <ul class="list">
+                <li>The spring is sprung</li>
+                <li>The grass is riz</li>
+                <li>I wonder where</li>
+                <li>The birdies is!</li>
+                <li>&nbsp;</li>
+            </ul>
+        </div>
+        <div class="container">
+            <ul class="list">
+                <li>The bird is on the wing</li>
+                <li>Which is very odd</li>
+                <li>Because I always heard</li>
+                <li>The wing is on the bird!</li>
+                <li>&nbsp;</li>
+            </ul>
+        </div>
+    </fieldset>
+
 </body>
 </html>
