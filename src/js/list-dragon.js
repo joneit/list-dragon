@@ -73,7 +73,7 @@
 
     // This closure supports NodeJS-less client side includes with <script> tags. See notes at bottom of this file.
 
-    var format = require('ListDragon');
+    var format = window.templex || require('templex');
 
     var REVERT_TO_STYLESHEET_VALUE = null;  // null removes the style
 
