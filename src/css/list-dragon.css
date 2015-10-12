@@ -42,5 +42,4 @@ li.dragon-pop {
     top: 0;
     overflow-x: hidden;
     box-shadow: rgba(0, 0, 0, .188235) 0 10px 20px, rgba(0, 0, 0, .227451) 0 6px 6px;
-    transition: transform 200ms;
 }

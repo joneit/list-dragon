@@ -73,7 +73,7 @@
 
     var format = require('templex');
 
-    var REINHERIT_STYLESHEET_VALUE = null;  // null removes the style
+    var REVERT_TO_STYLESHEET_VALUE = null;  // null removes the style
 
     var body, transform;
 
@@ -255,12 +255,12 @@
 
         reinsert: function (target) {
             var style = target.style;
-            style.width = style[transform] = style.transition = REINHERIT_STYLESHEET_VALUE;
+            style.width = style[transform] = style.transition = REVERT_TO_STYLESHEET_VALUE;
 
             target.classList.remove('dragon-pop');
 
             this.drop.style.transitionDuration = '0s';
-            this.drop.style.borderTopWidth = REINHERIT_STYLESHEET_VALUE;
+            this.drop.style.borderTopWidth = REVERT_TO_STYLESHEET_VALUE;
             this.drop.parentElement.insertBefore(target, this.drop);
 
             delete this.drop;
@@ -343,7 +343,7 @@
         },
 
         mousemove: function (dragon, evt) {
-            dragon.drop.style.transition = REINHERIT_STYLESHEET_VALUE;
+            dragon.drop.style.transition = REVERT_TO_STYLESHEET_VALUE;
 
             var dx = evt.clientX - dragon.pin.x,
                 dy = evt.clientY - dragon.pin.y,
@@ -360,7 +360,7 @@
 
             if (other) {
                 var element = other.element;
-                element.style.transition = REINHERIT_STYLESHEET_VALUE;
+                element.style.transition = REVERT_TO_STYLESHEET_VALUE;
                 element.style.borderTopWidth = dragon.drop.style.borderTopWidth;
                 dragon.drop.style.borderTopWidth = null;
                 dragon.drop = element;
@@ -384,7 +384,8 @@
                 var dropRect = dragon.drop.getBoundingClientRect();
 
                 dragon.addEvt(this, 'transitionend', this);
-                this.style.transitionDuration = REINHERIT_STYLESHEET_VALUE;
+                this.style.transitionDuration = REVERT_TO_STYLESHEET_VALUE; //reverts to 200ms
+                this.style.transitionProperty = transform;
                 this.style[transform] = translate(
                     dropRect.left - window.scrollX,
                     dropRect.top - window.scrollY
@@ -396,6 +397,8 @@
             if (evt.propertyName === transform) {
                 dragon.removeEvt('transitionend');
                 dragon.reinsert(this);
+
+                this.style.transitionProperty = REVERT_TO_STYLESHEET_VALUE; //reverts to border-top-width
 
                 var model = dragon.modelLists[dragon.origin.list].splice(dragon.origin.item, 1)[0];
                 var destination = dragon.itemCoordinates(this);
