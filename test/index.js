@@ -21,7 +21,7 @@ global.document = {
     }
 };
 
-var listDnD = require('../src/js/list-dragon.js');
+//var ListDragon = require('../src/js/list-dragon.js');
 
 function nullfunc() {}
 

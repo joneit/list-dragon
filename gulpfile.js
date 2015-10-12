@@ -42,7 +42,8 @@ gulp.task('default', ['build', 'watch'], function() {
             // Serve up our build folder
             baseDir: srcDir,
             routes: {
-                "/bower_components": "bower_components"
+                "/bower_components": "bower_components",
+                "/node_modules": "node_modules"
             }
         },
         port: 5000

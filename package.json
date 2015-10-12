@@ -9,6 +9,9 @@
   },
   "author": "JEiten",
   "license": "MIT",
+  "dependencies": {
+    "templex": "^1.0.0"
+  },
   "devDependencies": {
     "browser-sync": "^2.9.6",
     "gulp": "^3.9.0",

@@ -1,0 +1,27 @@
+div.dragon-list, li.dragon-pop {
+    font-family: 'Roboto', sans-serif;
+    text-transform: capitalize;
+}
+div.dragon-list {
+    display: inline-block;
+    width: 39%;
+    margin: 5%;
+    height: 350px;
+}
+div.dragon-list > div {
+    line-height: 46px;
+}
+div.dragon-list > ul {
+    top: 46px;
+}
+div.dragon-list > ul > li, li.dragon-pop {
+    line-height: 46px;
+}
+div.dragon-list > ul > li:not(:last-child)::before, li.dragon-pop::before {
+    content: '\2b24';
+    color: #b6b6b6;
+    font-size: 30px;
+    margin: 8px 14px 8px 8px;
+}
+li.dragon-pop {
+}

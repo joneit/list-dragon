@@ -1,3 +1,9 @@
-.idea
+.*
+*.sh
+bower*
+gulp*
+package.json
+README.md
 jsdoc-template
 doc
+test
