@@ -33,7 +33,7 @@
     <script>
         var ListDragon = require('list-dragon');
 
-        var verse = [
+        var verses = [
             [
                 '&rsquo;Twas brillig, and the slithy toves',
                 'Did gyre and gimble in the wabe;',
@@ -47,14 +47,10 @@
             ]
         ];
 
-        verse[1].title = 'by Lewis Carroll';
+        verses[0] = { title: 'Jabberwocky', models: verses[0] };
+        verses[1].title = 'by Lewis Carroll';
 
         window.onload = function () {
-
-            var modelLists = [
-                { title: 'Jabberwocky', models: verse[0] },
-                verse[1]
-            ];
 
             // See the constructor docs for model list specs!
             //
@@ -63,7 +59,7 @@
             // 2. The API creates the  <ul>...</ul> element(s) for you in the .modelLists property.
             // 3. Insert the created elements into the DOM wherever/however you want.
             var container = document.querySelectorAll('.container:first-of-type')[0];
-            new ListDragon(modelLists).modelLists.forEach(function (list, index) {
+            new ListDragon(verses).modelLists.forEach(function (list, index) {
                 container.appendChild(list.container);
             });
 
