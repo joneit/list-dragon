@@ -8,14 +8,11 @@ div.dragon-list {
     margin: 5%;
     height: 350px;
 }
-div.dragon-list > div {
+div.dragon-list > div, div.dragon-list > ul > li, li.dragon-pop {
     line-height: 46px;
 }
 div.dragon-list > ul {
     top: 46px;
-}
-div.dragon-list > ul > li, li.dragon-pop {
-    line-height: 46px;
 }
 div.dragon-list > ul > li:not(:last-child)::before, li.dragon-pop::before {
     content: '\2b24';

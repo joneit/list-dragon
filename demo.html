@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>list-dnd test harness</title>
+
+    <style>
+        div.container {
+            position: relative;
+            margin-bottom: 2em;
+            border: 1px solid green;
+            box-shadow: 5px 5px 2px #888888;
+            width: 95%;
+            height: 75%;
+            background-color: #009688;
+        }
+        div.dragon-list, li.dragon-pop {
+            font-family: 'Roboto', sans-serif;
+            text-transform: capitalize;
+        }
+        div.dragon-list {
+            display: inline-block;
+            width: 39%;
+            margin: 5%;
+            height: 350px;
+        }
+        div.dragon-list > div, div.dragon-list > ul > li, li.dragon-pop {
+            line-height: 46px;
+        }
+        div.dragon-list > ul {
+            top: 46px;
+        }
+        div.dragon-list > ul > li:not(:last-child)::before, li.dragon-pop::before {
+            content: '\2b24';
+            color: #b6b6b6;
+            font-size: 30px;
+            margin: 8px 14px 8px 8px;
+        }
+        li.dragon-pop {
+            opacity:.8;
+        }
+    </style>
+
+    <script src="https://joneit.github.io/templex/templex.min.js"></script>
+    <script src="https://openfin.github.io/list-dragon/list-dragon.min.js"></script>
+
+    <script>
+        var verses = [
+            [
+                '&rsquo;Twas brillig, and the slithy toves',
+                'Did gyre and gimble in the wabe;',
+                'All mimsy were the borogoves,',
+                'And the mome raths outgrabe.'
+            ], [
+                'Beware the Jabberwock, my son!',
+                'The jaws that bite, the claws that catch!',
+                'Beware the Jubjub bird, and shun',
+                'The frumious Bandersnatch!'
+            ]
+        ];
+
+        verses[0] = { title: 'Jabberwocky', models: verses[0] };
+        verses[1].title = 'by Lewis Carroll';
+
+        window.onload = function () {
+            // See the constructor docs for model list specs!
+            //
+            // Strategy 1: Supply your own models and let the API build the HTML
+            // 1. Supply a (list of) model list(s).
+            // 2. The API creates the  <ul>...</ul> element(s) for you in the .modelLists property.
+            // 3. Insert the created elements into the DOM wherever/however you want.
+            var container = document.querySelectorAll('.container:first-of-type')[0];
+            new ListDragon(verses).modelLists.forEach(function (list) {
+                container.appendChild(list.container);
+            });
+
+            // Strategy 2: Supply your own HTML and let the API build the models for you
+            // 1. Script your <ul>...</ul> elements in HTML.
+            // 2. Tell ListDragon where to find them via a CSS selector.
+            // You can hang auxiliary data off your <li> tags in attributes, such as `value` or `data-whatever`.
+            // But, hey, if you're going to do that, you're essentially using portions of the DOM as data models
+            // and maybe you should just consider supplying formal models instead (as in Strategy 1 above)!
+            new ListDragon('.container:last-of-type > div.dragon-list li');
+        };
+    </script>
+</head>
+
+<body>
+    <div class="container"></div>
+
+    <div class="container">
+        <div class="dragon-list">
+            <div>Title 1</div>
+            <ul>
+                <li>The spring is sprung</li>
+                <li>The grass is riz</li>
+                <li>I wonder where</li>
+                <li>The birdies is!</li>
+                <li>&nbsp;</li>
+            </ul>
+        </div>
+        <div class="dragon-list">
+            <div>Title 2</div>
+            <ul>
+                <li>The bird is on the wing</li>
+                <li>Which is very odd</li>
+                <li>Because I always heard</li>
+                <li>The wing is on the bird!</li>
+                <li>&nbsp;</li>
+            </ul>
+        </div>
+    </div>
+
+</body>
+</html>
