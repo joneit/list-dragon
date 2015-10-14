@@ -1,5 +1,6 @@
 .*
 *.sh
+index.html
 bower*
 gulp*
 package.json

@@ -5,12 +5,17 @@ var gulp        = require('gulp'),
     runSequence = require('run-sequence'),
     browserSync = require('browser-sync').create(),
     exec        = require('child_process').exec,
-    path        = require('path');
+    path        = require('path'),
+    inject      = require('gulp-inject'),
+    escapeStr   = require('js-string-escape'),
+    CleanCss    = require("clean-css"),
+    rename      = require('gulp-rename');
 
 var srcDir  = './src/',
     testDir = './test/',
     jsDir   = srcDir + 'js/',
-    jsFiles = '**/*.js';
+    jsFiles = '**/*.js',
+    destDir = './';
 
 var js = {
     dir   : jsDir,
@@ -25,7 +30,7 @@ gulp.task('doc', doc);
 
 gulp.task('build', function(callback) {
     clearBashScreen();
-    runSequence('lint', 'test', 'doc',
+    runSequence('lint', 'test', 'doc', 'inject-css',
         callback);
 });
 
@@ -39,7 +44,6 @@ gulp.task('watch', function () {
 gulp.task('default', ['build', 'watch'], function() {
     browserSync.init({
         server: {
-            // Serve up our build folder
             baseDir: srcDir,
             routes: {
                 "/bower_components": "bower_components",
@@ -49,6 +53,34 @@ gulp.task('default', ['build', 'watch'], function() {
         port: 5000
     });
 });
+
+gulp.task('inject-css', function () {
+    var target = gulp.src(jsDir + 'list-dragon.js'),
+        source = gulp.src(srcDir + 'css/list-dragon.css'),
+        destination = gulp.dest(destDir);
+
+    target
+        .pipe(inject(source, {
+            transform: cssToJsFn,
+            starttag: '/* {{name}}:{{ext}} */',
+            endtag: '/* endinject */'
+        }))
+        .pipe(rename('index.js'))
+        .pipe(destination);
+});
+
+function cssToJsFn(filePath, file) {
+    var STYLE_HEADER = '(function(){var a="',
+        STYLE_FOOTER = '",b=document.createElement("style"),head=document.head||document.getElementsByTagName("head")[0];b.type="text/css";if(b.styleSheet)b.styleSheet.cssText=a;else b.appendChild(document.createTextNode(a));head.insertBefore(b,head.firstChild)})();';
+
+    var css = new CleanCss({})
+        .minify(file.contents.toString())
+        .styles;
+
+    file.contents = new Buffer(STYLE_HEADER + escapeStr(css) + STYLE_FOOTER);
+
+    return file.contents.toString('utf8');
+}
 
 function lint() {
     return gulp.src(js.files)
