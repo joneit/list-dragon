@@ -24,11 +24,14 @@ git rm -rf -q .
 # copy the doc directory from the workspace
 cp -R ../../$repo/doc/* . >/dev/null
 
-# copy index.js from repo/. to the cdn directory
+# copy index.js from repo/. to the cdn directory as list-dragon.js
 cp ../../$repo/index.js ./list-dragon.js >/dev/null
 
 # make a minified version
 uglify -s list-dragon.js -o list-dragon.min.js
+
+# copy the demo
+cp ../../$repo/demo.html . >>/dev/null
 
 # send it up
 git add . >/dev/null
