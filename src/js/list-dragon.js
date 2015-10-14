@@ -479,7 +479,10 @@
             clearInterval(timer);
             scrollVelocity = 0;
         } else {
-            var changeDirection = Math.sign(scrollVelocity) !== Math.sign(magnitude);
+            var changeDirection =
+                scrollVelocity  <  0 && magnitude  >= 0 ||
+                scrollVelocity === 0 && magnitude !== 0 ||
+                scrollVelocity  >  0 && magnitude  <= 0;
             scrollVelocity = magnitude > 0 ? Math.min(50, magnitude) : Math.max(-50, magnitude);
             if (changeDirection) {
                 clearInterval(timer);

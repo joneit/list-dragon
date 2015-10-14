@@ -80,7 +80,7 @@
     var body, transform, timer, scrollVelocity;
 
     /* inject:css */
-    (function(){var a="div.dragon-list{position:relative;background-color:#fff}div.dragon-list>div,div.dragon-list>ul{position:absolute;left:0;right:0}div.dragon-list>div{text-align:center;background-color:#00796b;color:#fff;box-shadow:0 3px 6px rgba(0,0,0,.16),0 3px 6px rgba(0,0,0,.23);overflow:hidden;white-space:nowrap}div.dragon-list>ul{overflow-y:auto;bottom:0;margin:0;padding:0;box-shadow:0 1px 3px rgba(0,0,0,.12),0 1px 2px rgba(0,0,0,.24)}div.dragon-list>ul>li,li.dragon-pop{white-space:nowrap;list-style-type:none;border:0 solid #f4f4f4;border-bottom:1px solid #e0e0e0;cursor:move;transition:border-top-width .2s}div.dragon-list>ul>li:last-child{height:0;background-color:#0ff;border-bottom:none}li.dragon-pop{position:fixed;background-color:#fff;border:1px solid #e0e0e0;left:0;top:0;overflow-x:hidden;box-shadow:rgba(0,0,0,.188235) 0 10px 20px,rgba(0,0,0,.227451) 0 6px 6px}",b=document.createElement("style"),head=document.head||document.getElementsByTagName("head")[0];b.type="text/css";if(b.styleSheet)b.styleSheet.cssText=a;else b.appendChild(document.createTextNode(a));head.insertBefore(b,head.firstChild)})();
+    (function(){var a="div.dragon-list{position:relative;background-color:#fff}div.dragon-list>div,div.dragon-list>ul{position:absolute;left:0;right:0}div.dragon-list>div{text-align:center;background-color:#00796b;color:#fff;box-shadow:0 3px 6px rgba(0,0,0,.16),0 3px 6px rgba(0,0,0,.23);overflow:hidden;white-space:nowrap}div.dragon-list>ul{overflow-y:auto;bottom:0;margin:0;padding:0;box-shadow:0 1px 3px rgba(0,0,0,.12),0 1px 2px rgba(0,0,0,.24)}div.dragon-list>ul>li,li.dragon-pop{white-space:nowrap;list-style-type:none;border:0 solid #f4f4f4;border-bottom:1px solid #e0e0e0;cursor:move;transition:border-top-width .2s}div.dragon-list>ul>li:last-child{height:0;border-bottom:none}li.dragon-pop{position:fixed;background-color:#fff;border:1px solid #e0e0e0;left:0;top:0;overflow-x:hidden;box-shadow:rgba(0,0,0,.188235) 0 10px 20px,rgba(0,0,0,.227451) 0 6px 6px}",b=document.createElement("style"),head=document.head||document.getElementsByTagName("head")[0];b.type="text/css";if(b.styleSheet)b.styleSheet.cssText=a;else b.appendChild(document.createTextNode(a));head.insertBefore(b,head.firstChild)})();
     /* endinject */
 
     /**
@@ -480,7 +480,10 @@
             clearInterval(timer);
             scrollVelocity = 0;
         } else {
-            var changeDirection = Math.sign(scrollVelocity) !== Math.sign(magnitude);
+            var changeDirection =
+                scrollVelocity  <  0 && magnitude  >= 0 ||
+                scrollVelocity === 0 && magnitude !== 0 ||
+                scrollVelocity  >  0 && magnitude  <= 0;
             scrollVelocity = magnitude > 0 ? Math.min(50, magnitude) : Math.max(-50, magnitude);
             if (changeDirection) {
                 clearInterval(timer);

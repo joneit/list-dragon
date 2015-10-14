@@ -31,8 +31,7 @@ div.dragon-list > ul > li, li.dragon-pop {
     transition: border-top-width 200ms;
 }
 div.dragon-list > ul > li:last-child {
-    height: 0;
-    background-color: cyan;
+    height: 0px;
     border-bottom: none;
 }
 li.dragon-pop {
