@@ -1,3 +1,4 @@
+/* This CSS is for the test harness. The list dragon code itself does not depend on this stylesheet. */
 div.dragon-list, li.dragon-pop {
     font-family: 'Roboto', sans-serif;
     text-transform: capitalize;
