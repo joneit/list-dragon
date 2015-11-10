@@ -5,70 +5,6 @@
 
 /* eslint-env node, browser */
 
-/**
- * @typedef {string|object} itemModelType
- *
- * @summary Data model for a drag-and-drop list item.
- *
- * @desc These "models" are typically just string primitives. Alternatively, you can supply your own object so long as it has a `label` property to hold the string. If you need to include the `htmlEncode` property then you have no choice; you must make it an object.
- *
- * > The models are not altered or rebuilt by the {@link ListDragon|constructor} nor by a successful drag-and-drop operation.
- *
- * @property {string} [label] - The string to display in the list item. If omitted, defaults to the value of the {@link modelListType} array's `label` property.
- *
- * Alternatively, the label string may be a template incorporating `{...}`-style data merge flags. These will be replaced with the values of the properties so named. For example, the following model object ...
- *
- * ```javascript
- * var template = '<b>#{jersey}</b> - ' +
- *     '{lastName}, {firstName} ' +
- *     '<i>{position}</i>';
- *
- * var model = {
- *     label: template,
- *     firstName: 'Graham',
- *     lastName: 'Zusi',
- *     jersey: 10,
- *     position: 'Midfielder'
- * }
- * ```
- *
- * ... produces a list item that looks something like this:
- *
- * <div style="display:inline-block;border:1px solid #ccc;padding:3px 8px;box-shadow:3px 3px 5px"><b>#10</b> - Graham Zusi, <i>Midfielder</i></div>
- *
- * @property {boolean} [htmlEncode] - If truthy, encode the string. If omitted, inherit value from the property of the same name hanging off of the containing {@link modelListType} array.
- */
-
-/**
- * @typedef {itemModelType[]|object} modelListType
- *
- * @summary List of models representing a `<ul>...</ul>` element to be generated.
- *
- * @desc This list can be supplied to the ListDragon {@link ListDragon|constructor} and ListDragon will generate the HTML for you.
- *
- * Because JavaScript array literal syntax does not accommodate additional properties, you may specify an object rather than an array and include a `models` property (see below) to hold the actual model list array.
- *
- * > This object will be mutated by the constructor as follows:
- * 1. If this is an object (rather than an array, as discussed above), the constructor converts it to an array with additional properties.
- * 2. The constructor adds in the `container` and `element`.
- *
- * @property {itemModelType[]} models - The model list array (when this is an object). _Only include this property if this is an object and not an array._
- *
- * @property {boolean|function} [isDropTarget=true] - Enables the list as a target for dropping list items. If a function, it is called on every 'mousedown' event with `this` as the `modelListType` object; it should return a boolean.
- *
- * @property {string} [title] - Wraps generated `<ul>...</ul>` element in a `<div>...</div>` element and prepends a `<div>...</div>` for the title.
- *
- * @property {boolean} [htmlEncode=options.htmlEncode] - Encode the title and all model labels (unless models[*].hmtlEncode is defined as falsey).
- *
- * @property {string} [cssClassNames=options.cssClassNames] - CSS class name for container `<div>...<div>` element (when there is a title) or `<ul>...</ul>` element (when there is not).
- *
- * @property {string} [label] - Default list item contents when list item is a model with no `label` property of its own. Not especially useful unless a template. (See {@link itemModelType} for details.)
- *
- * @property {Element} container - A new `<div>...</div>` element ready for DOM insertion. It contains a nested `<div>...</div>` for the header (when `title` given) and a nested `<ul>...</ul>` for the drag-and-drop item list. _Do not specify this property yourself; it is added automatically by the ListDragon {@link ListDragon|constructor}._
- *
- * @property {Element} element - The `<ul>...</ul>` element nested within the containing `<div>...</div>` element. _Do not specify this property yourself; it is added automatically by the ListDragon {@link ListDragon|constructor}._
- */
-
 (function (module) {  // eslint-disable-line no-unused-expressions
 
     // This closure supports NodeJS-less client side includes with <script> tags. See notes at bottom of this file.
@@ -85,26 +21,39 @@
     /**
      * @constructor ListDragon
      *
-     * @desc This object services a set of item lists that allow dragging and dropping items with and between them.
+     * @desc This object services a set of item lists that allow dragging and dropping items within and between lists in a set.
      *
      * Two strategies are supported:
      *
-     * 1. Supply your own models and let the API build the HTML.
-     * To use this strategy, provide an array of model lists.
-     * 2. Supply your own HTML and let the API build the models for you.
-     * To use this strategy, script your HTML and provide one of these:
+     * 1. Supply your own HTML markup and let the API build the item models for you.
+     *    To use this strategy, script your HTML and provide one of these:
      *    * an array of all the list item (`<li>`) tags
      *    * a CSS selector that points to all the list item tags
+     * 2. Supply your own item models and let the API build the HTML markup for you.
+     *    To use this strategy, provide an array of model lists.
      *
-     * For the first strategy, when you supply a model list array, the new ListDragon object will include a reference to it in the `modelLists` property. For the second strategy, when you supply the HTML, the constructor builds the `modelLists` array for you.
+     * The new ListDragon object's `modelLists` property references the array of model lists the API constructed for you in strategy #1 or the array of model lists you supplied for strategy #2.
      *
-     * In either case, after the user performs a successful drag-and-drop operation, the position of the models within this array will have changed. (The models themselves are the original objects as supplied in the model lists; they are not touched (altered or rebuilt) in any way.)
+     * After the user performs a successful drag-and-drop operation, the position of the model references within the `modelLists` array is rearranged. (The models themselves are the original objects as supplied in the model lists; they are not rebuilt or altered in any way. Just the references to them are moved around.)
      *
-     * @param {modelListType[]|Element[]|string} selectorOrModelLists - See the {@link modelListType|typedef} for details.
-     * @param {object} [options={}] - outer scope for template variables, after each model and each model list
-     * @param {boolean} [options.htmlEncode=false] - Encode the title and all model labels (unless models[*].hmtlEncode is defined as falsey).
-     * @param {string} [options.cssClassNames='dragon-list'] - CSS class name for container `<div>...<div>` element (when there is a title) or `<ul>...</ul>` element (when there is not).
-     * @param {string} [label]
+     * @param {string|Element[]|modelListType[]} selectorOrModelLists - You must supply one of the items in **bold** below:
+     *
+     * 1. _For strategy #1 above (API creates models from supplied elements):_ All the list item (`<li>`) DOM elements of all the lists you want the new object to manage, as either:
+     *    1. **A CSS selector;** _or_
+     *    2. **An array of DOM elements**
+     * 2. _For strategy #2 above (API creates elements from supplied models):_ **An array of model lists,** each of which is in one of the following forms:
+     *    1. An array of item models (with various option properties hanging off of it); _and/or_
+     *    2. A {@link modelListType} object with those same various option properties including the required `models` property containing that same array of item models.
+     *
+     * In either case (2.1 or 2.2), each element of such arrays of item models may take the form of:
+     * * A string primitive; _or_
+     * * A {@link itemModelType} object with a various option properties including the required `label` property containing a string primitive.
+     *
+     * Regarding these string primitives, each is either:
+     * * A string to be displayed in the list item; _or_
+     * * A format string with other property values merged in, the result of which is to be displayed in the list item.
+     *
+     * @param {object} [options={}] - There are no formal options, but you can supply "global" template variables here, representing the "outer scope," after first searching each model and then each model list.
      */
     function ListDragon(selectorOrModelLists, options) {
 
@@ -112,37 +61,25 @@
             throw error('Not called with "new" keyword.');
         }
 
-        var self = this;
-        var modelLists, items;
+        var self = this, modelLists, items;
 
         options = options || {};
 
-        if (selectorOrModelLists instanceof Array) {
-            // param is model list array
-            // build new <ul> element(s) from given array(s) and put in `.modelLists`;
+        if (typeof selectorOrModelLists === 'string') {
+            items = toArray(document.querySelectorAll(selectorOrModelLists));
+            modelLists = createModelListsFromListElements(items);
+        } else if (selectorOrModelLists[0] instanceof Element) {
+            items = toArray(selectorOrModelLists);
+            modelLists = createModelListsFromListElements(items);
+        } else {
+            // param is array of model lists
+            // build new <ul> element(s) for each list and put in `.modelLists`;
             // fill `.items` array with <li> elements from these new <ul> elements
             items = [];
             modelLists = createListElementsFromModelLists(selectorOrModelLists, options);
             modelLists.forEach(function (list) {
                 items = items.concat(toArray(list.element.querySelectorAll('li')));
             });
-        } else {
-            if (selectorOrModelLists[0] instanceof Element) {
-                // param is list of <li>...</li> elements
-                items = selectorOrModelLists;
-            } else {
-                // param is selector
-                // fill `.items` array with <li>...</li> elements from selected <ul> elements
-                selectorOrModelLists = (selectorOrModelLists || '\\').replace(/\\/g, 'li');
-                items = document.querySelectorAll(selectorOrModelLists);
-            }
-
-            if (!(items instanceof Array)) {
-                items = toArray(items);
-            }
-
-            // fill `.modelLists` array with these <li> elements' parent <ul> elements
-            modelLists = createModelListsFromListElements(items);
         }
 
         items.forEach(function (itemElement, index) {
@@ -151,9 +88,9 @@
                 : { element: itemElement };
 
             /* `item.model` not currently needed so commented out here.
-             * Originally used for rebuilding modelLists for final reporting,
-             * modelLists are now spliced on the fly (on every successful
-             * drag-and-drop operation) so they're always up to date.
+             * (Originally used for rebuilding modelLists for final
+             * reporting, modelLists are now spliced on every successful
+             * drag-and-drop operation so they're always up to date.)
 
              var origin = this.itemCoordinates(itemElement);
              item.model = this.modelLists[origin.list].models[origin.item];
@@ -399,13 +336,13 @@
                     // list is scrollable (is taller than rect)
                     if (hoverList.element.scrollTop > 0 && (magnitude = y - (hoverList.rect.top + 5)) < 0) {
                         // mouse near or above top and list is not scrolled to top yet
-                        resetTimer(magnitude, 0, hoverList.element);
+                        resetAutoScrollTimer(magnitude, 0, hoverList.element);
                     } else if (hoverList.element.scrollTop < maxScrollY && (magnitude = y - (hoverList.rect.bottom - 1 - 5)) > 0) {
                         // mouse near or below bottom and list not scrolled to bottom yet
-                        resetTimer(magnitude, maxScrollY, hoverList.element);
+                        resetAutoScrollTimer(magnitude, maxScrollY, hoverList.element);
                     } else {
                         // mouse inside
-                        resetTimer();
+                        resetAutoScrollTimer();
                     }
                 }
 
@@ -430,7 +367,7 @@
         },
 
         mouseup: function (dragon, evt) {
-            resetTimer();
+            resetAutoScrollTimer();
             dragon.removeEvt('mousemove');
             dragon.removeEvt('mouseup');
 
@@ -474,7 +411,7 @@
         }
     };
 
-    function resetTimer(magnitude, limit, element) {
+    function resetAutoScrollTimer(magnitude, limit, element) {
         if (!magnitude) {
             clearInterval(timer);
             scrollVelocity = 0;
@@ -585,10 +522,15 @@
         return modelLists;
     }
 
-    function createModelListsFromListElements(items) {
+    /**
+     * Create a `.modelLists` array with these <li> elements' parent <ul> elements
+     * @param {Element[]} listItemElements
+     * @returns {Array}
+     */
+    function createModelListsFromListElements(listItemElements) {
         var modelLists = [];
 
-        items.forEach(function (itemElement) {
+        listItemElements.forEach(function (itemElement) {
             var listElement = itemElement.parentElement,
                 container = listElement.parentElement,
                 models = [];
@@ -608,17 +550,17 @@
     }
 
     function error() {
-        return 'ListDragon: ' + format.apply(this, Array.prototype.slice.call(arguments));
+        return 'list-dragon: ' + format.apply(this, Array.prototype.slice.call(arguments));
     }
 
     // this interface consists solely of the prototypal object constructor
     module.exports = ListDragon;
 
 })(
-    typeof window === 'undefined' ? module : window.module || (window.ListDragon = {}),
-    typeof window === 'undefined' ? module.exports : window.module && window.module.exports || (window.ListDragon.exports = {})
+    typeof module === 'object' && module || (window.ListDragon = {}),
+    typeof module === 'object' && module.exports || (window.ListDragon.exports = {})
 ) || (
-    typeof window === 'undefined' || window.module || (window.ListDragon = window.ListDragon.exports)
+    typeof module === 'object' || (window.ListDragon = window.ListDragon.exports)
 );
 
 /* About the above IIFE:

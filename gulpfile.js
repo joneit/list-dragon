@@ -1,15 +1,14 @@
 'use strict';
 
 var gulp        = require('gulp'),
-    $$          = require('gulp-load-plugins')(),
-    runSequence = require('run-sequence'),
+    $$          = require('gulp-load-plugins')();
+
+var runSequence = require('run-sequence'),
     browserSync = require('browser-sync').create(),
     exec        = require('child_process').exec,
     path        = require('path'),
-    inject      = require('gulp-inject'),
     escapeStr   = require('js-string-escape'),
-    CleanCss    = require("clean-css"),
-    rename      = require('gulp-rename');
+    CleanCss    = require("clean-css");
 
 var srcDir  = './src/',
     testDir = './test/',
@@ -60,12 +59,12 @@ gulp.task('inject-css', function () {
         destination = gulp.dest(destDir);
 
     target
-        .pipe(inject(source, {
+        .pipe($$.inject(source, {
             transform: cssToJsFn,
             starttag: '/* {{name}}:{{ext}} */',
             endtag: '/* endinject */'
         }))
-        .pipe(rename('index.js'))
+        .pipe($$.rename('index.js'))
         .pipe(destination);
 });
 
