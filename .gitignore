@@ -1,5 +1,6 @@
 .DS_Store
-.idea
-node_modules
-bower_components
-doc
+/.idea
+/node_modules
+/doc
+/build/list-dragon*
+/src/index.js
