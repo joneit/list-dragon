@@ -5,11 +5,12 @@
 
 'use strict';
 
+var cssInjector = require('css-injector');
 var format = require('templex');
 
 var REVERT_TO_STYLESHEET_VALUE = null;  // null removes the style
 
-var body, transform, timer, scrollVelocity;
+var body, transform, timer, scrollVelocity, cssListDragon;
 
 /* inject:css */
 /* endinject */
@@ -49,7 +50,12 @@ var body, transform, timer, scrollVelocity;
  * * A string to be displayed in the list item; _or_
  * * A format string with other property values merged in, the result of which is to be displayed in the list item.
  *
- * @param {object} [options={}] - There are no formal options, but you can supply "global" template variables here, representing the "outer scope," after first searching each model and then each model list.
+ * @param {object} [options={}] - You may supply "global" template variables here, representing the "outer scope," after first searching each model and then each model list.
+ * @param {undefined|null|Element|string} [cssStylesheetReferenceElement] - Determines where to insert the stylesheet. (This is the only formal option.) Passed to css-injector, the overloads are (from css-injector docs):
+ * * `undefined` type (or omitted): injects stylesheet at top of `<head>...</head>` element
+ * * `null` value: injects stylesheet at bottom of `<head>...</head>` element
+ * * `Element` type: injects stylesheet immediately before given element, wherever it is found.
+ * * `string` type: injects stylesheet immediately before given first element found that matches the given css selector.
  */
 function ListDragon(selectorOrModelLists, options) {
 
@@ -112,6 +118,8 @@ function ListDragon(selectorOrModelLists, options) {
     this.items = items;
     this.bindings = {};
     this.callback = {};
+
+    cssInjector(cssListDragon, 'list-dragon-base', options.cssStylesheetReferenceElement);
 
 }
 

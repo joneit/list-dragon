@@ -69,8 +69,8 @@ gulp.task('inject-css', function () {
 //  //  //  //  //  //  //  //  //  //  //  //
 
 function cssToJsFn(filePath, file) {
-    var STYLE_HEADER = '(function(){var a="',
-        STYLE_FOOTER = '",b=document.createElement("style"),head=document.head||document.getElementsByTagName("head")[0];b.type="text/css";if(b.styleSheet)b.styleSheet.cssText=a;else b.appendChild(document.createTextNode(a));head.insertBefore(b,head.firstChild)})();';
+    var STYLE_HEADER = 'cssListDragon = \'',
+        STYLE_FOOTER = '\';';
 
     var css = new CleanCss({})
         .minify(file.contents.toString())
