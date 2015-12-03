@@ -1,14 +1,11 @@
 # list-dnd
 Drag and drop items between lists.
 
-Try the [demo](https://openfin.github.io/list-dragon/demo.html).
-
-
 > NOTE: As of v1.2.0, list-dragon is now a simple node module. It is no longer a "modified node module" (containing its own extra closure for use directly in a browser).
 
 ### API documentation
 
-Detailed API docs can be found [here](http://openfin.github.io/list-dragon/global.html).
+Detailed API docs can be found [here](http://openfin.github.io/list-dragon/ListDragon.html).
 
 ### Demo
 

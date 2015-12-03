@@ -10,7 +10,7 @@ var format = require('templex');
 
 var REVERT_TO_STYLESHEET_VALUE = null;  // null removes the style
 
-var body, transform, timer, scrollVelocity, cssListDragon;
+var transform, timer, scrollVelocity, cssListDragon;
 
 /* inject:css */
 /* endinject */
@@ -106,8 +106,6 @@ function ListDragon(selectorOrModelLists, options) {
 
         items[index] = item;
     });
-
-    body = body || document.getElementsByTagName('body')[0];
 
     transform = 'transform' in items[0].element.style
         ? 'transform' // Chrome 45 and Firefox 40
@@ -320,7 +318,19 @@ var handlers = {
         this.classList.add('dragon-pop');
         this.style.zIndex = window.getComputedStyle(dragon.modelLists[0].container.parentElement).zIndex;
 
-        body.appendChild(this);
+        if (!dragon.container) {
+            // walk back to closest shadow root OR body tag OR root tag
+            var container = this;
+            while (container.parentNode) {
+                container = container.parentNode;
+                if (container instanceof ShadowRoot || container.tagName === 'BODY'){
+                    break;
+                }
+            }
+            dragon.container = container;
+        }
+
+        dragon.container.appendChild(this);
 
         rect.left   += window.scrollX;
         rect.top    += window.scrollY;

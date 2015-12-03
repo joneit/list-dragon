@@ -1,4 +1,4 @@
 .*
-*.css
 browserify_root.js
-types.doc.js
+list-dragon.*
+*.doc.js
