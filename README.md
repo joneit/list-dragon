@@ -1,7 +1,7 @@
 # list-dnd
 Drag and drop items between lists.
 
-> NOTE: As of v1.2.0, list-dragon is now a simple node module. It is no longer a "modified node module" (containing its own extra closure for use directly in a browser).
+> v1.3.1 qualifies reference to `ShadowRoot` which was previously erroring out in non-Chrome browsers.
 
 ### API documentation
 
@@ -18,7 +18,7 @@ To use in a browser, you have two options:
 1. Incorporate the node module into your own browserified project.
 2. Use the browserified versions [`list-dragon.js`](http://openfin.github.io/list-dragon/list-dragon.js) or [`list-dragon.min.js`](http://openfin.github.io/list-dragon/list-dragon.min.js) available on the Github pages CDN.
 
-### Submodules
+### Git Submodules
 
 See the note [Regarding submodules](https://github.com/openfin/rectangular#regarding-submodules)
 for important information on cloning this repo or re-purposing its build template.

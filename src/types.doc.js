@@ -94,24 +94,24 @@
  * ```javascript
  *  var set = [
  *      {   // list 1
-     *          title: 'Fruits',
-     *          models:  [
-     *              'apple',
-     *              'orange',
-     *              'banana'
-     *          ]
-     *      },
+ *          title: 'Fruits',
+ *          models:  [
+ *              'apple',
+ *              'orange',
+ *              'banana'
+ *          ]
+ *      },
  *      {   // list 2
-     *          title: 'Vegetables',
-     *          models: [
-     *              {
-     *                  label: '<lettuce>',
-     *                  htmlEncode: true
-     *              },
-     *              { label: 'tomato' },
-     *              'cucumber'
-     *          ]
-     *      }
+ *          title: 'Vegetables',
+ *          models: [
+ *              {
+ *                  label: '<lettuce>',
+ *                  htmlEncode: true
+ *              },
+ *              { label: 'tomato' },
+ *              'cucumber'
+ *          ]
+ *      }
  *  ];
  * ```
  * Note how list 2 in the above example shows how you can supply objects rather than string primitives. This allows you to give additional options.

@@ -40,5 +40,5 @@ popd >/dev/null
 rm -rf ../temp >/dev/null
 
 echo 'Opening page at http://$org.github.io/$repo/ ...'
-open http://$org.github.io/$repo/
+open http://$org.github.io/$repo/ListDragon.html
 echo 'CAVEAT: New pages will not be immediately available so wait a few minutes and refresh.'

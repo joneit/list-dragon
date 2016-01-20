@@ -323,7 +323,10 @@ var handlers = {
             var container = this;
             while (container.parentNode) {
                 container = container.parentNode;
-                if (container instanceof ShadowRoot || container.tagName === 'BODY'){
+                if (
+                    typeof ShadowRoot !== 'undefined' && container instanceof ShadowRoot ||
+                    container.tagName === 'BODY'
+                ){
                     break;
                 }
             }
