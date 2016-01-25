@@ -1,5 +1,5 @@
 // list-dragon node module
-// https://github.com/openfin/list-dragon
+// https://github.com/joneit/list-dragon
 
 /* eslint-env node, browser */
 

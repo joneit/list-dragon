@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-org="openfin"
+org="joneit"
 
 # set variable repo to current directory name (without path)
 repo=${PWD##*/}
