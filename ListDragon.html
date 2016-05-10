@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Class: ListDragon</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="ListDragon.html">ListDragon</a></li></ul><h3>Global</h3><ul><li><a href="global.html#createListElementsFromModelLists">createListElementsFromModelLists</a></li><li><a href="global.html#createModelListsFromListElements">createModelListsFromListElements</a></li></ul>
+</nav>
+<div id="main">
+
+    <h1 class="page-title">Class: ListDragon</h1>
+
+    
+
+
+
+
+<section>
+
+<header>
+    
+        <h2>
+        ListDragon
+        </h2>
+        
+    
+</header>
+
+<article>
+    <div class="container-overview">
+    
+        
+
+    
+
+    <h4 class="name" id="ListDragon"><span class="type-signature"></span>new ListDragon<span class="signature">(selectorOrModelLists, options<span class="signature-attributes">opt</span>, cssStylesheetReferenceElement<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    <p>This object services a set of item lists that allow dragging and dropping items within and between lists in a set.</p>
+<p>Two strategies are supported:</p>
+<ol>
+<li>Supply your own HTML markup and let the API build the item models for you.
+To use this strategy, script your HTML and provide one of these:<ul>
+<li>an array of all the list item (<code>&lt;li&gt;</code>) tags</li>
+<li>a CSS selector that points to all the list item tags</li>
+</ul>
+</li>
+<li>Supply your own item models and let the API build the HTML markup for you.
+To use this strategy, provide an array of model lists.</li>
+</ol>
+<p>The new ListDragon object's <code>modelLists</code> property references the array of model lists the API constructed for you in strategy #1 or the array of model lists you supplied for strategy #2.</p>
+<p>After the user performs a successful drag-and-drop operation, the position of the model references within the <code>modelLists</code> array is rearranged. (The models themselves are the original objects as supplied in the model lists; they are not rebuilt or altered in any way. Just the references to them are moved around.)</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>selectorOrModelLists</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+|
+
+<span class="param-type">Array.&lt;Element></span>
+|
+
+<span class="param-type">Array.&lt;<a href="global.html#modelListType">modelListType</a>></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>You must supply one of the items in <strong>bold</strong> below:</p>
+<ol>
+<li><em>For strategy #1 above (API creates models from supplied elements):</em> All the list item (<code>&lt;li&gt;</code>) DOM elements of all the lists you want the new object to manage, as either:<ol>
+<li><strong>A CSS selector;</strong> <em>or</em></li>
+<li><strong>An array of DOM elements</strong></li>
+</ol>
+</li>
+<li><em>For strategy #2 above (API creates elements from supplied models):</em> <strong>An array of model lists,</strong> each of which is in one of the following forms:<ol>
+<li>An array of item models (with various option properties hanging off of it); <em>and/or</em></li>
+<li>A <a href="global.html#modelListType"><code>modelListType</code></a> object with those same various option properties including the required <code>models</code> property containing that same array of item models.</li>
+</ol>
+</li>
+</ol>
+<p>In either case (2.1 or 2.2), each element of such arrays of item models may take the form of:</p>
+<ul>
+<li>A string primitive; <em>or</em></li>
+<li>A <a href="global.html#itemModelType"><code>itemModelType</code></a> object with a various option properties including the required <code>label</code> property containing a string primitive.</li>
+</ul>
+<p>Regarding these string primitives, each is either:</p>
+<ul>
+<li>A string to be displayed in the list item; <em>or</em></li>
+<li>A format string with other property values merged in, the result of which is to be displayed in the list item.</li>
+</ul></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>options</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    {}
+                
+                </td>
+            
+
+            <td class="description last"><p>You may supply &quot;global&quot; template variables here, representing the &quot;outer scope,&quot; after first searching each model and then each model list.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>cssStylesheetReferenceElement</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">undefined</span>
+|
+
+<span class="param-type">null</span>
+|
+
+<span class="param-type">Element</span>
+|
+
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>Determines where to insert the stylesheet. (This is the only formal option.) Passed to css-injector, the overloads are (from css-injector docs):</p>
+<ul>
+<li><code>undefined</code> type (or omitted): injects stylesheet at top of <code>&lt;head&gt;...&lt;/head&gt;</code> element</li>
+<li><code>null</code> value: injects stylesheet at bottom of <code>&lt;head&gt;...&lt;/head&gt;</code> element</li>
+<li><code>Element</code> type: injects stylesheet immediately before given element, wherever it is found.</li>
+<li><code>string</code> type: injects stylesheet immediately before given first element found that matches the given css selector.</li>
+</ul></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    </div>
+
+    
+
+    
+
+    
+
+     
+
+    
+
+    
+
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+
+
+
+<section>
+
+<header>
+    
+        <h2>
+        ListDragon
+        </h2>
+        
+    
+</header>
+
+<article>
+    <div class="container-overview">
+    
+        
+
+    
+
+    <h4 class="name" id="ListDragon"><span class="type-signature"></span>new ListDragon<span class="signature">(selectorOrModelLists, options<span class="signature-attributes">opt</span>, cssStylesheetReferenceElement<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    <p>This object services a set of item lists that allow dragging and dropping items within and between lists in a set.</p>
+<p>Two strategies are supported:</p>
+<ol>
+<li>Supply your own HTML markup and let the API build the item models for you.
+To use this strategy, script your HTML and provide one of these:<ul>
+<li>an array of all the list item (<code>&lt;li&gt;</code>) tags</li>
+<li>a CSS selector that points to all the list item tags</li>
+</ul>
+</li>
+<li>Supply your own item models and let the API build the HTML markup for you.
+To use this strategy, provide an array of model lists.</li>
+</ol>
+<p>The new ListDragon object's <code>modelLists</code> property references the array of model lists the API constructed for you in strategy #1 or the array of model lists you supplied for strategy #2.</p>
+<p>After the user performs a successful drag-and-drop operation, the position of the model references within the <code>modelLists</code> array is rearranged. (The models themselves are the original objects as supplied in the model lists; they are not rebuilt or altered in any way. Just the references to them are moved around.)</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>selectorOrModelLists</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+|
+
+<span class="param-type">Array.&lt;Element></span>
+|
+
+<span class="param-type">Array.&lt;<a href="global.html#modelListType">modelListType</a>></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>You must supply one of the items in <strong>bold</strong> below:</p>
+<ol>
+<li><em>For strategy #1 above (API creates models from supplied elements):</em> All the list item (<code>&lt;li&gt;</code>) DOM elements of all the lists you want the new object to manage, as either:<ol>
+<li><strong>A CSS selector;</strong> <em>or</em></li>
+<li><strong>An array of DOM elements</strong></li>
+</ol>
+</li>
+<li><em>For strategy #2 above (API creates elements from supplied models):</em> <strong>An array of model lists,</strong> each of which is in one of the following forms:<ol>
+<li>An array of item models (with various option properties hanging off of it); <em>and/or</em></li>
+<li>A <a href="global.html#modelListType"><code>modelListType</code></a> object with those same various option properties including the required <code>models</code> property containing that same array of item models.</li>
+</ol>
+</li>
+</ol>
+<p>In either case (2.1 or 2.2), each element of such arrays of item models may take the form of:</p>
+<ul>
+<li>A string primitive; <em>or</em></li>
+<li>A <a href="global.html#itemModelType"><code>itemModelType</code></a> object with a various option properties including the required <code>label</code> property containing a string primitive.</li>
+</ul>
+<p>Regarding these string primitives, each is either:</p>
+<ul>
+<li>A string to be displayed in the list item; <em>or</em></li>
+<li>A format string with other property values merged in, the result of which is to be displayed in the list item.</li>
+</ul></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>options</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    {}
+                
+                </td>
+            
+
+            <td class="description last"><p>You may supply &quot;global&quot; template variables here, representing the &quot;outer scope,&quot; after first searching each model and then each model list.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>cssStylesheetReferenceElement</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">undefined</span>
+|
+
+<span class="param-type">null</span>
+|
+
+<span class="param-type">Element</span>
+|
+
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>Determines where to insert the stylesheet. (This is the only formal option.) Passed to css-injector, the overloads are (from css-injector docs):</p>
+<ul>
+<li><code>undefined</code> type (or omitted): injects stylesheet at top of <code>&lt;head&gt;...&lt;/head&gt;</code> element</li>
+<li><code>null</code> value: injects stylesheet at bottom of <code>&lt;head&gt;...&lt;/head&gt;</code> element</li>
+<li><code>Element</code> type: injects stylesheet immediately before given element, wherever it is found.</li>
+<li><code>string</code> type: injects stylesheet immediately before given first element found that matches the given css selector.</li>
+</ul></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    </div>
+
+    
+
+    
+
+    
+
+     
+
+    
+
+    
+
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+</div>
+
+<br class="clear">
+
+<footer>
+    © 2016 <a href="http://www.openfin.co" target="_blank">OpenFin</a> All Rights Reserved.
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
