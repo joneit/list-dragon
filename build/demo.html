@@ -75,8 +75,11 @@ window.onload = function () {
     var container = document.querySelectorAll('.container:first-of-type')[0],
         listSet = new ListDragon(verses);
 
-    listSet.modelLists.forEach(function(list) {
+    listSet.modelLists.forEach(function(list, i) {
         container.appendChild(list.container);
+        list.element.addEventListener('listchanged', function(evt) {
+            console.log('List ' + i + ' changed');
+        });
     });
 
     sets.push(listSet);

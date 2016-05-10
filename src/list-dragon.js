@@ -427,9 +427,20 @@ var handlers = {
 
             this.style.transitionProperty = REVERT_TO_STYLESHEET_VALUE; //reverts to border-top-width
 
-            var model = dragon.modelLists[dragon.origin.list].splice(dragon.origin.item, 1)[0];
+            var originList = dragon.modelLists[dragon.origin.list];
+            var model = originList.splice(dragon.origin.item, 1)[0];
             var destination = dragon.itemCoordinates(this);
-            dragon.modelLists[destination.list].splice(destination.item, 0, model);
+            var destinationList = dragon.modelLists[destination.list];
+            var interListDrop = originList !== destinationList;
+            var listChanged = interListDrop || dragon.origin.item !== destination.item;
+            destinationList.splice(destination.item, 0, model);
+
+            if (listChanged) {
+                originList.element.dispatchEvent(new CustomEvent('listchanged'));
+                if (interListDrop) {
+                    destinationList.element.dispatchEvent(new CustomEvent('listchanged'));
+                }
+            }
 
             if (dragon.callback.dropped) {
                 dragon.callback.dropped.call(this, dragon);
