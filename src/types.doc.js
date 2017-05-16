@@ -43,7 +43,7 @@
  *
  * > This object will be mutated by the constructor as follows:
  * 1. If this is an object (rather than an array, as discussed above), the constructor converts it to an array with additional properties.
- * 2. The constructor adds in the `container` and `element`.
+ * 2. The constructor adds in the `container` and `element` properties.
  *
  * If the `itemModelType.htmlEncode` property is true, the string is encoded first so that it can display markup; otherwise any markup in the string is interpreted by the browser.
  *
@@ -81,7 +81,7 @@
  *      'tomato',
  *      'cucumber'
  *  ];
- *  list2.title = 'Vegitables';
+ *  list2.title = 'Vegetables';
  *
  *  var set = [
  *      list1,

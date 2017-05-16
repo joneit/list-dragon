@@ -51,7 +51,7 @@ var transform, timer, scrollVelocity, cssListDragon;
  * * A format string with other property values merged in, the result of which is to be displayed in the list item.
  *
  * @param {object} [options={}] - You may supply "global" template variables here, representing the "outer scope," after first searching each model and then each model list.
- * @param {undefined|null|Element|string} [cssStylesheetReferenceElement] - Determines where to insert the stylesheet. (This is the only formal option.) Passed to css-injector, the overloads are (from css-injector docs):
+ * @param {undefined|null|Element|string} [options.cssStylesheetReferenceElement] - Determines where to insert the stylesheet. (This is the only formal option.) Passed to css-injector, the overloads are (from css-injector docs):
  * * `undefined` type (or omitted): injects stylesheet at top of `<head>...</head>` element
  * * `null` value: injects stylesheet at bottom of `<head>...</head>` element
  * * `Element` type: injects stylesheet immediately before given element, wherever it is found.
@@ -530,7 +530,7 @@ function createListElementsFromModelLists(modelLists, options) {
         modelList.forEach(function (model) {
             var modelLabel = model.label || listLabel,
                 modelHtmlEncode = model.htmlEncode !== undefined && model.htmlEncode || listHtmlEncode,
-                modelObject = typeof model === 'object' ? model : { label: model},
+                modelObject = typeof model === 'object' ? model : { label: model },
                 label = format.call([modelObject, modelList, options], modelLabel),
                 itemElement = document.createElement('li');
 
